@@ -3,15 +3,15 @@ import networkx
 from decomposition_analysis import DecompositionAnalysis
 from graphs import bipartite_graph_complete, complete_graph, undirected_graph
 
-
 if __name__ == "__main__":
     # complete graph
-    v = ['v_1', 'v_2', 'v_3', 'd']
-    print(f"Checking complete graph (K_{len(v)}) ... ")
-    decompositions = complete_graph(v)
-    analysis = DecompositionAnalysis(decompositions)
-    analysis.brute_force_decompositions()
-    analysis.print_results()
+    for n in range(3, 7):
+        v = ['d'] + ['v_' + str(i) for i in range(1, n)]
+        print(f"Checking complete graph (K_{len(v)}) ... ")
+        decompositions = complete_graph(v)
+        analysis = DecompositionAnalysis(decompositions)
+        analysis.brute_force_decompositions()
+        analysis.print_results()
 
     # complete bipartite graph
     a = ['a_1', 'a_2', 'a_3', 'd']

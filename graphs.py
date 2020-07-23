@@ -2,11 +2,12 @@ import itertools
 import networkx
 
 from typing import *
-from arborescence import Arborescence, brute_force_decomposition
+from arborescence import Arborescence
+from arborescence_decomposition import ArborescenceDecomposition
 
 
 def _init_arborescences(graph: networkx.DiGraph, edge_connectivity: int) -> List[
-    Tuple[List[Arborescence], networkx.DiGraph]]:
+    Tuple[ArborescenceDecomposition, networkx.DiGraph]]:
     assert 'd' in graph
 
     init_arcs = [(v, 'd') for v in graph.neighbors('d') if v != 'd']
@@ -20,24 +21,25 @@ def _init_arborescences(graph: networkx.DiGraph, edge_connectivity: int) -> List
 
         reduced_graph = graph.copy()
         reduced_graph.remove_edges_from(arc_combination)
-        arborescence_decompositions.append((arborescences, reduced_graph))
+        arborescence_decompositions.append((ArborescenceDecomposition(arborescences), reduced_graph))
 
     return arborescence_decompositions
 
 
-def bipartite_graph_complete(a: List[AnyStr], b: List[AnyStr]) -> List[Tuple[List[Arborescence], networkx.DiGraph]]:
+def bipartite_graph_complete(a: List[AnyStr], b: List[AnyStr]) -> List[
+    Tuple[ArborescenceDecomposition, networkx.DiGraph]]:
     graph = networkx.complete_multipartite_graph(a, b)
     connectivity = min([len(a), len(b)])
     return undirected_graph(graph, connectivity)
 
 
-def complete_graph(vertices: List[AnyStr]) -> List[Tuple[List[Arborescence], networkx.DiGraph]]:
+def complete_graph(vertices: List[AnyStr]) -> List[Tuple[ArborescenceDecomposition, networkx.DiGraph]]:
     graph = networkx.complete_graph(vertices)
     return undirected_graph(graph, edge_connectivity=(len(graph) - 1))
 
 
 def undirected_graph(graph: networkx.Graph, edge_connectivity: int) -> List[
-    Tuple[List[Arborescence], networkx.DiGraph]]:
+    Tuple[ArborescenceDecomposition, networkx.DiGraph]]:
     assert 'd' in graph
     decompositions = _init_arborescences(graph.to_directed(), edge_connectivity)
     print(f"Found {len(decompositions)} distinct starting arborescence combination(s).")
