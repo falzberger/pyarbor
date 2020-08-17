@@ -57,13 +57,13 @@ def adbed_decomposition(graph: nx.DiGraph, connectivity: int, destination: str):
         edges_usable = set(graph.edges).difference(edges_used)
 
         if j % 2 == 1 and j != k:
-            edges_usable.difference_update(edges_odd)
-        elif j % 2 == 0:
             edges_usable.difference_update(edges_even)
+        elif j % 2 == 0:
+            edges_usable.difference_update(edges_odd)
 
         edges_visited = []
         while len(arborescence.nodes) != len(graph.nodes):
-            edges_priority = edges_even if j % 2 == 1 else edges_odd
+            edges_priority = edges_odd if j % 2 == 1 else edges_even
             edges_priority = edges_priority.copy().intersection(edges_usable)
             e = find_incident_edge(arborescence, edges_priority)
 
@@ -77,11 +77,11 @@ def adbed_decomposition(graph: nx.DiGraph, connectivity: int, destination: str):
             if tarjan_condition(e, graph, edges_used, connectivity - j, destination):
                 arborescence.add_edge(e[0], e[1])
                 edges_used.add(e)
-                edges_even.discard(e) if j % 2 == 1 else edges_odd.discard(e)
+                edges_odd.discard(e) if j % 2 == 1 else edges_even.discard(e)
 
                 e_reverse = (e[1], e[0])
                 if e_reverse not in edges_used:
-                    edges_odd.add(e_reverse) if j % 2 == 1 else edges_even.add(e_reverse)
+                    edges_even.add(e_reverse) if j % 2 == 1 else edges_odd.add(e_reverse)
 
         decomposition.append(arborescence)
 
